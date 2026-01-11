@@ -1,0 +1,27 @@
+workflows:
+  android-workflow:
+    name: Android Workflow
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set up local.properties
+        script: | 
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/mobile/android/local.properties"
+      - name: Get Flutter dependencies
+        script: | 
+          cd mobile
+          flutter packages pub get
+      - name: Build APK
+        script: | 
+          cd mobile
+          flutter build apk --debug
+    artifacts:
+      - mobile/build/app/outputs/flutter-apk/*.apk
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
